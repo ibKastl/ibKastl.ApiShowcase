@@ -1,16 +1,7 @@
 # ibKastl.ApiShowcase
 
-EPLAN: API
-```csharp
-private static Page CreatePage(Project project)
-{
-  PagePropertyList pagePropertyList = new PagePropertyList();
-  pagePropertyList.DESIGNATION_PLANT = "MYFUNCTION";
-  pagePropertyList.DESIGNATION_LOCATION = "MYLOCATION";
-  Page page = new Page(project, DocumentTypeManager.DocumentType.Circuit, pagePropertyList);
-  return page;
-}
-```
+![](data/EPLAN/EPLAN_Scripting.png)
+![](data/EPLAN/EPLAN_API.png)
 
 ## EPLAN - Scripting & API
 
