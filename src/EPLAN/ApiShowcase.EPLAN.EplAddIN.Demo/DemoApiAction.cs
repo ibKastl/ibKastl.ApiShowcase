@@ -13,7 +13,7 @@ namespace ApiShowcase.EPLAN.EplAddIn.Demo
     const string PROJECT_TEMPLATE_FILE_PATH =
       @"\\Mac\Home\Documents\GitHub\ibKastl.DemoData\2.7\Vorlagen\ibKastl_Basisprojekt_2.7_V01.zw9";
 
-    const string PROJECT_LINK_FILE_PATH = @"C:\Test\Testproject.elk";
+    const string PROJECT_LINK_FILE_PATH = @"C:\Test\EPLAN\TestProject.elk";
 
     const string WINDOW_MACRO_PATH =
       @"\\Mac\Home\Documents\GitHub\ibKastl.DemoData\2.7\Makros\ARTIKELMAKROS\ELEKTROTECHNIK\EINZELTEIL\MEW\MODULATOREN\ALLGEMEINE\127730.ems";

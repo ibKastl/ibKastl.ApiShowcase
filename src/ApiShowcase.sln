@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiShowcase.EPLAN.EplAddIn.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiShowcase.EPLAN.Scripting.Demo", "EPLAN\ApiShowcase.EPLAN.Scripting.Demo\ApiShowcase.EPLAN.Scripting.Demo.csproj", "{39275D16-376B-48CB-823A-9D497583C294}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Siemens", "Siemens", "{64A7F0D2-2D61-4236-AB51-9AE96AF6FCA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiShowcase.Siemens.Openness.Demo", "Siemens\ApiShowcase.Siemens.Openness.Demo\ApiShowcase.Siemens.Openness.Demo.csproj", "{2AFE77FF-7A10-4FAE-AC19-9A597E6734D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +27,10 @@ Global
 		{39275D16-376B-48CB-823A-9D497583C294}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39275D16-376B-48CB-823A-9D497583C294}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39275D16-376B-48CB-823A-9D497583C294}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AFE77FF-7A10-4FAE-AC19-9A597E6734D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AFE77FF-7A10-4FAE-AC19-9A597E6734D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AFE77FF-7A10-4FAE-AC19-9A597E6734D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AFE77FF-7A10-4FAE-AC19-9A597E6734D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -30,6 +38,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{80AB025B-7EB1-401E-AB23-9F073E12A00D} = {5CEB6591-6968-4A18-96DD-40DE6BBC06F2}
 		{39275D16-376B-48CB-823A-9D497583C294} = {5CEB6591-6968-4A18-96DD-40DE6BBC06F2}
+		{2AFE77FF-7A10-4FAE-AC19-9A597E6734D2} = {64A7F0D2-2D61-4236-AB51-9AE96AF6FCA0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1387AD5B-640E-4153-96BE-325381ACDF18}
