@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -9,6 +10,7 @@ using Microsoft.Win32;
 using Siemens.Engineering;
 using Siemens.Engineering.Compiler;
 using Siemens.Engineering.Hmi;
+using Siemens.Engineering.HW;
 using Siemens.Engineering.HW.Features;
 using Siemens.Engineering.SW;
 using Siemens.Engineering.SW.Blocks;
@@ -23,7 +25,9 @@ namespace ApiShowcase.Siemens.Openness.Demo
     private static TiaPortal _tiaPortal;
     private static PlcSoftware _plcSoftware;
     private static HmiTarget _hmiTarget;
+    private static readonly List<Node> Nodes = new List<Node>();
 
+    [STAThread]
     static void Main()
     {
       Stopwatch sw = new Stopwatch();
@@ -33,24 +37,42 @@ namespace ApiShowcase.Siemens.Openness.Demo
 
       try
       {
-        var project = CreateProject();
+        var project = CreateProjectIfNotExists(PROJECT_PATH);
         CreateDevices(project);
+        CreateSubnet(project);
         LoadSclSources(_plcSoftware);
         InsertHmiPages(_hmiTarget);
         Compile();
         ShowBlockInEditor();
+        project.Save();
       }
       finally
       {
         TiaPortalProcess tiaProcess = _tiaPortal.GetCurrentProcess();
         var process = Process.GetProcessById(tiaProcess.Id);
         _tiaPortal.Dispose();
-        Console.WriteLine($"Finished in {sw.Elapsed.Seconds}s");
+        Console.WriteLine($"Finished in {sw.Elapsed.Minutes}:{sw.Elapsed.Seconds}");
         WindowHelper.BringProcessToFront(process);
 
-        //Console.WriteLine();
-        //Console.WriteLine("Press any key to continue...");
-        //Console.ReadKey();
+        Console.WriteLine();
+        Console.WriteLine("Press any key to continue...");
+        Console.ReadKey();
+      }
+    }
+
+    private static void CreateSubnet(Project project)
+    {
+      // Clear
+      foreach (var projectSubnet in project.Subnets.ToList())
+      {
+        projectSubnet.Delete();
+      }
+
+      // Connect
+      Subnet subnet = project.Subnets.Create("System:Subnet.Ethernet", "MySubnet");
+      foreach (var node in Nodes)
+      {
+        node.ConnectToSubnet(subnet);
       }
     }
 
@@ -99,7 +121,8 @@ namespace ApiShowcase.Siemens.Openness.Demo
       string lastWriteTimeUtcFormatted = lastWriteTimeUtc.ToString("yyyy'/'MM'/'dd HH:mm:ss.fff");
 
       // Get execution version
-      AssemblyName siemensAssembly = Assembly.GetExecutingAssembly().GetReferencedAssemblies().First(obj => obj.Name.Equals("Siemens.Engineering"));
+      AssemblyName siemensAssembly = Assembly.GetExecutingAssembly().GetReferencedAssemblies()
+                                             .First(obj => obj.Name.Equals("Siemens.Engineering"));
       string version = siemensAssembly.Version.ToString(2);
 
       // Set key and values
@@ -114,16 +137,16 @@ namespace ApiShowcase.Siemens.Openness.Demo
       key.SetValue("FileHash", convertedHash);
     }
 
-    private static Project CreateProject()
+    public static Project CreateProjectIfNotExists(string projectFullPath)
     {
       Console.WriteLine("Create project...");
       Project project;
 
       // Open
-      if (File.Exists(PROJECT_PATH))
+      if (File.Exists(projectFullPath))
       {
-        FileInfo fileInfo = new FileInfo(PROJECT_PATH);
-        project = _tiaPortal.Projects.FirstOrDefault(obj => obj.Path.FullName.Equals(PROJECT_PATH));
+        FileInfo fileInfo = new FileInfo(projectFullPath);
+        project = _tiaPortal.Projects.FirstOrDefault(obj => obj.Path.FullName.Equals(projectFullPath));
         if (project == null)
         {
           project = _tiaPortal.Projects.Open(fileInfo);
@@ -133,8 +156,8 @@ namespace ApiShowcase.Siemens.Openness.Demo
       // Create
       else
       {
-        string projectName = Path.GetFileNameWithoutExtension(PROJECT_PATH);
-        var directory = Path.GetDirectoryName(PROJECT_PATH);
+        string projectName = Path.GetFileNameWithoutExtension(projectFullPath);
+        var directory = Path.GetDirectoryName(projectFullPath);
         directory = Path.GetDirectoryName(directory); // Project folder name is same as project name
         DirectoryInfo directoryInfo = new DirectoryInfo(directory ?? throw new InvalidOperationException());
         project = _tiaPortal.Projects.Create(directoryInfo, projectName);
@@ -160,7 +183,8 @@ namespace ApiShowcase.Siemens.Openness.Demo
         if (_hmiTarget == null)
         {
           Console.WriteLine("Create HMI...");
-          project.Devices.CreateWithItem("OrderNumber:6AV2 123-2GB03-0AX0/15.1.0.0", "HMI_1", null); // Name not allowed
+          project.Devices.CreateWithItem("OrderNumber:6AV2 123-2GB03-0AX0/15.1.0.0", "HMI_1",
+                                         null); // Name not allowed
         }
 
         GetDeviceSoftware(project);
@@ -173,29 +197,44 @@ namespace ApiShowcase.Siemens.Openness.Demo
       {
         foreach (var deviceItem in device.DeviceItems)
         {
-          // Get software
-          SoftwareContainer softwareContainer = ((IEngineeringServiceProvider)deviceItem).GetService<SoftwareContainer>();
-          if (softwareContainer != null)
-          {
-            switch (softwareContainer.Software)
-            {
-              case HmiTarget hmiTarget:
-                Console.WriteLine("Get HmiTarget...");
-                _hmiTarget = hmiTarget;
-                break;
-              case PlcSoftware plcSoftware:
-                Console.WriteLine("Get PlcSoftware...");
-                _plcSoftware = plcSoftware;
-                break;
-            }
-          }
-
-          // All found
-          if (_hmiTarget != null && _plcSoftware != null)
-          {
-            return;
-          }
+          GetDeviceSoftware(deviceItem);
         }
+      }
+    }
+
+    private static void GetDeviceSoftware(DeviceItem deviceItem)
+    {
+      // Get software
+      SoftwareContainer softwareContainer =
+        ((IEngineeringServiceProvider)deviceItem).GetService<SoftwareContainer>();
+      if (softwareContainer != null)
+      {
+        switch (softwareContainer.Software)
+        {
+          case HmiTarget hmiTarget:
+            Console.WriteLine("Get HmiTarget...");
+            _hmiTarget = hmiTarget;
+            break;
+          case PlcSoftware plcSoftware:
+            Console.WriteLine("Get PlcSoftware...");
+            _plcSoftware = plcSoftware;
+            break;
+        }
+      }
+
+      // Get network interface
+      var networkInterface = deviceItem.GetService<NetworkInterface>();
+      if (networkInterface != null)
+      {
+        foreach (var node in networkInterface.Nodes)
+        {
+          Nodes.Add(node);
+        }
+      }
+
+      foreach (var subDeviceItem in deviceItem.DeviceItems)
+      {
+        GetDeviceSoftware(subDeviceItem);
       }
     }
 
@@ -206,6 +245,7 @@ namespace ApiShowcase.Siemens.Openness.Demo
       var source = plcSoftware.ExternalSourceGroup.ExternalSources.FirstOrDefault(obj => obj.Name.Equals(sourceName));
       if (source == null)
       {
+        Console.WriteLine("Load SCL sources...");
         string sourcePath = @"\\Mac\Home\Documents\GitHub\ibKastl.ApiShowcase\data\Siemens\CheckArray.scl";
         source = plcSoftware.ExternalSourceGroup.ExternalSources.CreateFromFile(sourceName, sourcePath);
       }
@@ -214,6 +254,7 @@ namespace ApiShowcase.Siemens.Openness.Demo
       PlcBlock block = plcSoftware.BlockGroup.Blocks.FirstOrDefault(obj => obj.Name.Equals(sourceName));
       if (block == null)
       {
+        Console.WriteLine("Generate block...");
         GenerateBlockOption options = GenerateBlockOption.KeepOnError;
         source.GenerateBlocksFromSource(options);
       }
@@ -221,6 +262,8 @@ namespace ApiShowcase.Siemens.Openness.Demo
 
     private static void InsertHmiPages(HmiTarget hmiTarget)
     {
+      Console.WriteLine("Insert screens from file...");
+
       string screenFile = @"\\Mac\Home\Documents\GitHub\ibKastl.ApiShowcase\data\Siemens\Screen.xml";
       FileInfo fileInfo = new FileInfo(screenFile);
 
