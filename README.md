@@ -2,6 +2,7 @@
 
 ![](data/EPLAN/EPLAN_Scripting.png)
 ![](data/EPLAN/EPLAN_API.png)
+![](data/Siemens/Siemens_Openness.png)
 
 ## EPLAN - Scripting & API
 
@@ -20,11 +21,13 @@
 
 ## Siemens - TIA Portal Openness
 
-- [Präsentation](TODO)
+- [Präsentation](https://github.com/ibKastl/ibKastl.ApiShowcase/blob/master/data/Siemens/API%20Showcase%20-%20Siemens%20TIA%20Portal.pptx)
 
-- [Demo](TODO)
+- [Demo](https://github.com/ibKastl/ibKastl.ApiShowcase/tree/master/src/Siemens/ApiShowcase.Siemens.Openness.Demo)
 
 - Referenzen
+  - TIA Portal Hilfe
+  - [Siemens Forum](https://support.industry.siemens.com/tf/ww/de/threads/241/)
   - [Beispiele](https://support.industry.siemens.com/cs/document/108716692/tia-portal-openness%3A-einf%C3%BChrung-und-demoanwendung?dti=0&lc=de-WW)
   - [Handbuch](https://support.industry.siemens.com/cs/document/109755218/simatic-automatisierung-von-projekten-mit-skripten?dti=0&lc=de-DE)
   - [DotNetSiemensPLCToolBoxLibrary](https://github.com/dotnetprojects/DotNetSiemensPLCToolBoxLibrary)
