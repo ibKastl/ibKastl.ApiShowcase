@@ -60,22 +60,6 @@ namespace ApiShowcase.Siemens.Openness.Demo
       }
     }
 
-    private static void CreateSubnet(Project project)
-    {
-      // Clear
-      foreach (var projectSubnet in project.Subnets.ToList())
-      {
-        projectSubnet.Delete();
-      }
-
-      // Connect
-      Subnet subnet = project.Subnets.Create("System:Subnet.Ethernet", "MySubnet");
-      foreach (var node in Nodes)
-      {
-        node.ConnectToSubnet(subnet);
-      }
-    }
-
     private static void InitTiaPortal()
     {
       Console.WriteLine("Check firewall...");
@@ -188,6 +172,22 @@ namespace ApiShowcase.Siemens.Openness.Demo
         }
 
         GetDeviceSoftware(project);
+      }
+    }
+
+    private static void CreateSubnet(Project project)
+    {
+      // Clear
+      foreach (var projectSubnet in project.Subnets.ToList())
+      {
+        projectSubnet.Delete();
+      }
+
+      // Connect
+      Subnet subnet = project.Subnets.Create("System:Subnet.Ethernet", "MySubnet");
+      foreach (var node in Nodes)
+      {
+        node.ConnectToSubnet(subnet);
       }
     }
 
