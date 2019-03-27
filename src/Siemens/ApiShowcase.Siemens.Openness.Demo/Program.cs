@@ -154,7 +154,7 @@ namespace ApiShowcase.Siemens.Openness.Demo
       Console.WriteLine("Get devices...");
 
       // Get existing
-      GetDeviceSoftware(project);
+      GetDeviceObjects(project);
 
       // Create
       if (_plcSoftware == null || _hmiTarget == null)
@@ -171,7 +171,7 @@ namespace ApiShowcase.Siemens.Openness.Demo
                                          null); // Name not allowed
         }
 
-        GetDeviceSoftware(project);
+        GetDeviceObjects(project);
       }
     }
 
@@ -191,18 +191,18 @@ namespace ApiShowcase.Siemens.Openness.Demo
       }
     }
 
-    private static void GetDeviceSoftware(Project project)
+    private static void GetDeviceObjects(Project project)
     {
       foreach (var device in project.Devices)
       {
         foreach (var deviceItem in device.DeviceItems)
         {
-          GetDeviceSoftware(deviceItem);
+          GetDeviceObjects(deviceItem);
         }
       }
     }
 
-    private static void GetDeviceSoftware(DeviceItem deviceItem)
+    private static void GetDeviceObjects(DeviceItem deviceItem)
     {
       // Get software
       SoftwareContainer softwareContainer =
@@ -234,7 +234,7 @@ namespace ApiShowcase.Siemens.Openness.Demo
 
       foreach (var subDeviceItem in deviceItem.DeviceItems)
       {
-        GetDeviceSoftware(subDeviceItem);
+        GetDeviceObjects(subDeviceItem);
       }
     }
 
