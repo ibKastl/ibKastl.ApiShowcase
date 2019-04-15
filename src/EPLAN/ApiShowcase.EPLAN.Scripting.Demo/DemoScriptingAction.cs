@@ -14,7 +14,7 @@ namespace ApiShowcase.EPLAN.Scripting.Demo
     public void Action()
     {
       // Export data via label action
-      string outputPath = @"C:\Test\";
+      string outputPath = @"C:\Test\EPLAN\Export";
 
       string schemePartList = "Summarized parts list";
       string filePartList = Path.Combine(outputPath, "Summarized parts list.txt");

@@ -1,11 +1,9 @@
 ﻿# Ein Gerät übersetzen
 
 open Portal
-open Project "\\Mac\Home\Documents\GitHub\Suplanus.Stapi\data\debug\MyProject\MyProject.ap15_1"
+open Project "C:\Test\Siemens\TestProject\TestProject.ap15_1"
 
 select Plc "PLC_1"
 compile Plc
-
-
 
 disconnect Portal
