@@ -73,6 +73,7 @@ namespace ApiShowcase.EPLAN.EplAddIn.Demo
       pagePropertyList.DESIGNATION_PLANT = "MYFUNCTION";
       pagePropertyList.DESIGNATION_LOCATION = "MYLOCATION";
       Page page = new Page(project, DocumentTypeManager.DocumentType.Circuit, pagePropertyList);
+      page.Properties.PAGE_NOMINATIOMN = "My description";
       return page;
 
       // todo: Locking
